@@ -1,0 +1,10 @@
+version: '3'
+services:
+  nextjs-app:
+    container_name: teaprapancha-demo
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - '6992:3000'
+    restart: unless-stopped
