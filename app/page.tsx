@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { useState, useEffect } from 'react';
 import { motion, useAnimation, useScroll, useTransform } from 'framer-motion';
@@ -26,12 +26,21 @@ export default function ComingSoon() {
     controls.start('visible');
   }, [controls]);
 
-  const handleSubscribe = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
+  const handleSubscribe = () => {
+    if (email.trim()) {
       setIsSubscribed(true);
       setEmail('');
       setTimeout(() => setIsSubscribed(false), 4000);
+    }
+  };
+
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      handleSubscribe();
     }
   };
 
@@ -41,8 +50,7 @@ export default function ComingSoon() {
       opacity: 1,
       transition: {
         duration: 1.2,
-        staggerChildren: 0.2,
-        ease: "easeOut"
+        staggerChildren: 0.2
       }
     }
   };
@@ -54,8 +62,7 @@ export default function ComingSoon() {
       y: 0,
       scale: 1,
       transition: { 
-        duration: 1,
-        ease: [0.25, 0.46, 0.45, 0.94]
+        duration: 1
       }
     }
   };
@@ -67,8 +74,7 @@ export default function ComingSoon() {
       scale: 1,
       rotate: 0,
       transition: { 
-        duration: 1.5, 
-        ease: [0.25, 0.46, 0.45, 0.94] 
+        duration: 1.5
       }
     },
     float: {
@@ -76,8 +82,7 @@ export default function ComingSoon() {
       rotate: [-2, 2, -2],
       transition: {
         duration: 6,
-        repeat: Infinity,
-        ease: "easeInOut"
+        repeat: Infinity
       }
     }
   };
@@ -102,17 +107,11 @@ export default function ComingSoon() {
     { Icon: Mail, href: "#", label: "Email", color: "from-red-500 to-orange-500" }
   ];
 
-  const teaElements = [
-    { Icon: Coffee, delay: 0 },
-    { Icon: Leaf, delay: 1 },
-    { Icon: Sparkles, delay: 2 }
-  ];
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-400 via-amber-500 via-yellow-500 to-orange-600 relative overflow-hidden">
       {/* Dynamic mouse-following cursor effect */}
       <motion.div
-        className="fixed w-6 h-6 bg-white/30 rounded-full pointer-events-none z-50 mix-blend-difference"
+        className="fixed w-6 h-6 bg-white/30 rounded-full pointer-events-none z-50 mix-blend-difference hidden md:block"
         animate={{
           x: mousePosition.x - 12,
           y: mousePosition.y - 12,
@@ -149,7 +148,7 @@ export default function ComingSoon() {
         />
         
         {/* Floating tea elements */}
-        {[...Array(8)].map((_, i) => (
+        {Array.from({ length: 8 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute w-4 h-4 bg-white/20 rounded-full"
@@ -172,7 +171,7 @@ export default function ComingSoon() {
         ))}
 
         {/* Sparkle effects */}
-        {[...Array(12)].map((_, i) => (
+        {Array.from({ length: 12 }).map((_, i) => (
           <motion.div
             key={`sparkle-${i}`}
             className="absolute"
@@ -256,7 +255,7 @@ export default function ComingSoon() {
                     filter: "drop-shadow(0 4px 6px rgba(0,0,0,0.3))"
                   }}
                 >
-                  We're Brewing
+                  We&apos;re Brewing
                 </motion.h1>
                 <motion.div
                   className="relative"
@@ -274,7 +273,7 @@ export default function ComingSoon() {
                   </h2>
                   {/* Tea steam effect */}
                   <div className="absolute -top-2 left-1/2 transform -translate-x-1/2">
-                    {[...Array(3)].map((_, i) => (
+                    {Array.from({ length: 3 }).map((_, i) => (
                       <motion.div
                         key={i}
                         className="absolute w-1 h-8 bg-gradient-to-t from-white/40 to-transparent rounded-full"
@@ -313,21 +312,21 @@ export default function ComingSoon() {
                 variants={itemVariants}
                 className="max-w-lg mx-auto mb-8 sm:mb-10 lg:mb-12 px-4"
               >
-                <form onSubmit={handleSubscribe} className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                   <div className="flex-1">
                     <motion.input
                       type="email"
                       value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                      onChange={handleEmailChange}
+                      onKeyPress={handleKeyPress}
                       placeholder="Enter your email for updates"
                       whileFocus={{ scale: 1.02 }}
                       className="w-full px-4 sm:px-6 py-3 sm:py-4 rounded-full bg-white/20 backdrop-blur-xl border border-white/40 text-white placeholder-white/80 focus:outline-none focus:ring-2 focus:ring-white/60 focus:border-white/60 focus:bg-white/30 transition-all duration-300 shadow-xl text-sm sm:text-base"
                       style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
-                      required
                     />
                   </div>
                   <motion.button
-                    type="submit"
+                    onClick={handleSubscribe}
                     whileHover={{ 
                       scale: 1.05,
                       boxShadow: "0 20px 40px rgba(0,0,0,0.3)"
@@ -354,7 +353,7 @@ export default function ComingSoon() {
                       )}
                     </span>
                   </motion.button>
-                </form>
+                </div>
                 {isSubscribed && (
                   <motion.p
                     initial={{ opacity: 0, y: 10, scale: 0.9 }}
@@ -365,7 +364,7 @@ export default function ComingSoon() {
                       textShadow: '0 1px 3px rgba(0,0,0,0.3)'
                     }}
                   >
-                    🎉 Thank you for subscribing! We'll keep you updated with our latest brewing adventures.
+                    🎉 Thank you for subscribing! We&apos;ll keep you updated with our latest brewing adventures.
                   </motion.p>
                 )}
               </motion.div>
