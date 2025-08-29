@@ -9,16 +9,4 @@ services:
     ports:
       - '6892:3000'
     restart: unless-stopped
-    networks:
-      - coolify
-    labels:
-      - traefik.enable=true
-      - traefik.docker.network=coolify
-      - "traefik.http.routers.teaprapancha.rule=Host(`teaprapancha.in`)"
-      - traefik.http.routers.teaprapancha.entrypoints=http,https
-      - traefik.http.routers.teaprapancha.tls.certresolver=letsencrypt
-      - traefik.http.services.teaprapancha.loadbalancer.server.port=3000
-
-networks:
-  coolify:
-    external: true
+    
